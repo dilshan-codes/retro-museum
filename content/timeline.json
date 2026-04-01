@@ -1,0 +1,46 @@
+{
+  "events": [
+    {
+      "id": "1936",
+      "year": 1936,
+      "title": "The Turing Machine",
+      "short": "Alan Turing theorizes a machine that can compute anything.",
+      "doc": "events/1936.md"
+    },
+    {
+      "id": "1947",
+      "year": 1947,
+      "title": "The Transistor",
+      "short": "Bell Labs invents the transistor, replacing vacuum tubes.",
+      "doc": "events/1947.md"
+    },
+    {
+      "id": "1948",
+      "year": 1948,
+      "title": "Manchester Baby",
+      "short": "The world's first stored-program computer runs its first program.",
+      "doc": "events/1948.md"
+    },
+    {
+      "id": "1957",
+      "year": 1957,
+      "title": "The First Digital Image",
+      "short": "Russell Kirsch scans the first digital photograph, the pixel is born.",
+      "doc": "events/1957.md"
+    },
+    {
+      "id": "1971",
+      "year": 1971,
+      "title": "The Microprocessor",
+      "short": "Intel releases the 4004, the first CPU on a single chip.",
+      "doc": "events/1971.md"
+    },
+    {
+      "id": "1977",
+      "year": 1977,
+      "title": "CHIP-8 & Personal Computing",
+      "short": "CHIP-8 is created, bringing programming to hobbyist computers.",
+      "doc": "events/1977.md"
+    }
+  ]
+}
