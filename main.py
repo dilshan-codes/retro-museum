@@ -9,6 +9,7 @@ from screens.history import HistoryScreen
 from screens.history_detail import HistoryDetailScreen
 from screens.turing import TuringScreen
 from screens.baby import BabyScreen
+from screens.chip8 import Chip8Screen
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -27,6 +28,7 @@ class MainWindow(QMainWindow):
         self.router.register("history", HistoryScreen)
         self.router.register("turing", TuringScreen)
         self.router.register("baby", BabyScreen)
+        self.router.register("chip8", Chip8Screen)
         
 
         # QMainWindow needs a central widget to hold everything inside
