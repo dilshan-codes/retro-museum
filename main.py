@@ -1,0 +1,76 @@
+import sys
+from PyQt6.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout
+from core.navigation import Navigator
+from core.router import Router
+from widgets.navbar import NavBar
+
+class MainWindow(QMainWindow):
+    def __init__(self):
+        super().__init__()
+
+        # Set the window title and minimum size
+        self.setWindowTitle("Retro Computing Museum")
+        self.setMinimumSize(1024, 700)
+
+        # Create one navigator and one router shared across the whole app
+        self.navigator = Navigator()
+        self.router = Router()
+
+        # QMainWindow needs a central widget to hold everything inside
+        self.central = QWidget()
+        self.setCentralWidget(self.central)
+
+        # Main layout stacks widgets vertically — navbar on top, screen below
+        self.main_layout = QVBoxLayout()
+        self.central.setLayout(self.main_layout)
+
+        # Create the navbar and connect its navigate signal to our handler
+        self.navbar = NavBar()
+        self.navbar.navigate.connect(self.handle_navigate)
+        self.main_layout.addWidget(self.navbar)
+
+        # Track the current screen so we can remove it when switching
+        self.current_screen = None
+        self.content_area = QWidget()
+        self.main_layout.addWidget(self.content_area)
+
+    def handle_navigate(self, route):
+        # Handle back and forward separately using the navigator stack
+        if route == "back":
+            route = self.navigator.back()
+        elif route == "forward":
+            route = self.navigator.forward()
+        else:
+            # Normal navigation — add to history stack
+            self.navigator.go_to(route)
+
+        # Update the navbar location label and switch to the new screen
+        self.navbar.update_location(route)
+        self.switch_screen(route)
+
+    def switch_screen(self, route):
+        # Remove and delete the current screen if one exists
+        if self.current_screen is not None:
+            self.main_layout.removeWidget(self.current_screen)
+            self.current_screen.deleteLater()
+
+        # Ask the router for the screen class matching this route
+        screen_class = self.router.resolve(route)
+        if screen_class is not None:
+            # Create the screen and pass handle_navigate so screens can navigate too
+            self.current_screen = screen_class(self.handle_navigate)
+            self.main_layout.addWidget(self.current_screen)
+
+    def showEvent(self, event):
+        # Runs automatically when window first appears — load home screen
+        super().showEvent(event)
+        if self.current_screen is None:
+            self.handle_navigate("home")
+
+
+if __name__ == "__main__":
+    # Create the app, show the window, start the event loop
+    app = QApplication(sys.argv)
+    window = MainWindow()
+    window.show()
+    sys.exit(app.exec())
