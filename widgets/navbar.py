@@ -69,6 +69,19 @@ class NavBar(QWidget):
             self.navigate.emit(routes[index])
 
     def update_location(self, route):
+        # Update dropdown without triggering navigation signal
+        route_to_index = {
+            "home": 0,
+            "history": 1,
+            "emulators": 2,
+            "turing": 3,
+            "baby": 4,
+            "chip8": 5
+        }
+        self.menu.blockSignals(True)
+        self.menu.setCurrentIndex(route_to_index.get(route, 0))
+        self.menu.blockSignals(False)
+
         labels = {
             "home": "Home",
             "history": "Home > History",
@@ -78,3 +91,4 @@ class NavBar(QWidget):
             "chip8": "Home > Emulators > CHIP-8"
         }
         self.location.setText(labels.get(route, "Home"))
+        

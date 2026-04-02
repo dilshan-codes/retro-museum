@@ -1,4 +1,5 @@
 import sys
+from screens.home import HomeScreen
 from PyQt6.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout
 from core.navigation import Navigator
 from core.router import Router
@@ -15,6 +16,8 @@ class MainWindow(QMainWindow):
         # Create one navigator and one router shared across the whole app
         self.navigator = Navigator()
         self.router = Router()
+
+        self.router.register("home", HomeScreen)
 
         # QMainWindow needs a central widget to hold everything inside
         self.central = QWidget()
@@ -52,12 +55,13 @@ class MainWindow(QMainWindow):
         # Remove and delete the current screen if one exists
         if self.current_screen is not None:
             self.main_layout.removeWidget(self.current_screen)
+            self.current_screen.hide()
             self.current_screen.deleteLater()
+            self.current_screen = None
 
         # Ask the router for the screen class matching this route
         screen_class = self.router.resolve(route)
         if screen_class is not None:
-            # Create the screen and pass handle_navigate so screens can navigate too
             self.current_screen = screen_class(self.handle_navigate)
             self.main_layout.addWidget(self.current_screen)
 
@@ -74,3 +78,4 @@ if __name__ == "__main__":
     window = MainWindow()
     window.show()
     sys.exit(app.exec())
+    
