@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QWidget, QHBoxLayout, QPushButton, QLabel, QComboBox
+from PyQt6.QtWidgets import QWidget, QHBoxLayout, QPushButton, QLabel, QComboBox, QSizePolicy
 from PyQt6.QtCore import pyqtSignal
 
 class NavBar(QWidget):
@@ -6,14 +6,23 @@ class NavBar(QWidget):
 
     def __init__(self):
         super().__init__()
+        self.setFixedHeight(45)
+
         self.layout = QHBoxLayout()
+        self.layout.setContentsMargins(8, 4, 8, 4)
+        self.layout.setSpacing(4)
         self.setLayout(self.layout)
 
-        self.back_btn = QPushButton("←")
-        self.forward_btn = QPushButton("→")
-        self.menu = QComboBox()
-        self.location = QLabel("Home")
+        # Back and forward buttons with fixed width
+        self.back_btn = QPushButton("⬅️ Back")
+        self.back_btn.setFixedWidth(100)
 
+        self.forward_btn = QPushButton("Forward ➡️")
+        self.forward_btn.setFixedWidth(100)
+
+        # Dropdown menu with fixed width
+        self.menu = QComboBox()
+        self.menu.setFixedWidth(200)
         self.menu.addItems([
             "Home",
             "History",
@@ -23,6 +32,22 @@ class NavBar(QWidget):
             "── CHIP-8"
         ])
 
+        # Location label expands to fill remaining space
+        self.location = QLabel("Home")
+        self.location.setSizePolicy(
+            QSizePolicy.Policy.Expanding,
+            QSizePolicy.Policy.Fixed
+        )
+        self.location.setStyleSheet("""
+            QLabel {
+                border: 1px solid #aaa;
+                border-radius: 3px;
+                padding: 2px 8px;
+                background-color: #f0ece4;
+                color: #1a1a1a;
+            }
+        """)
+
         self.layout.addWidget(self.back_btn)
         self.layout.addWidget(self.forward_btn)
         self.layout.addWidget(self.menu)
@@ -31,7 +56,6 @@ class NavBar(QWidget):
         self.back_btn.clicked.connect(self.on_back)
         self.forward_btn.clicked.connect(self.on_forward)
         self.menu.currentIndexChanged.connect(self.on_menu)
-    
 
     def on_back(self):
         self.navigate.emit("back")
@@ -54,5 +78,3 @@ class NavBar(QWidget):
             "chip8": "Home > Emulators > CHIP-8"
         }
         self.location.setText(labels.get(route, "Home"))
-    
-    
