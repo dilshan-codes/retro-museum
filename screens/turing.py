@@ -27,18 +27,16 @@ class TuringScreen(QWidget):
         self.main_layout.setSpacing(0)
         self.setLayout(self.main_layout)
 
-        # Top bar
+        # Top bar — title on left, toggle button on right
         top_bar = QWidget()
         top_bar.setStyleSheet("background-color: transparent;")
         top_layout = QHBoxLayout()
         top_layout.setContentsMargins(20, 12, 20, 12)
         top_bar.setLayout(top_layout)
 
-        # Title
         title = QLabel("Turing Machine  ·  1936")
         title.setStyleSheet("font-size: 20px; font-weight: bold; color: #1a1a1a;")
 
-        # Toggle button
         self.toggle_btn = QPushButton("📖  View History")
         self.toggle_btn.setFixedWidth(160)
         self.toggle_btn.setStyleSheet("""
@@ -59,16 +57,18 @@ class TuringScreen(QWidget):
         top_layout.addWidget(self.toggle_btn)
         self.main_layout.addWidget(top_bar)
 
-        # Separator
+        # Separator line — matches history screen
         line = QWidget()
         line.setFixedHeight(2)
         line.setStyleSheet("background-color: #2a2a2a;")
         self.main_layout.addWidget(line)
 
-        # Content area — swaps between emulator and history
+        # Content area — swaps between emulator and history doc
         self.content_area = QWidget()
+        self.content_area.setStyleSheet("background-color: #e8e0d0;")
         self.content_layout = QVBoxLayout()
         self.content_layout.setContentsMargins(0, 0, 0, 0)
+        self.content_layout.setSpacing(0)
         self.content_area.setLayout(self.content_layout)
         self.main_layout.addWidget(self.content_area)
 
@@ -78,14 +78,23 @@ class TuringScreen(QWidget):
         self.clear_content()
         self.toggle_btn.setText("📖  View History")
 
+        # Use QScrollArea like history screen for consistent look
+        scroll = QScrollArea()
+        scroll.setWidgetResizable(True)
+        scroll.setStyleSheet("border: none; background-color: #e8e0d0;")
+        scroll.viewport().setStyleSheet("background-color: #e8e0d0;")
+
+        wrapper = QWidget()
+        wrapper.setStyleSheet("background-color: #e8e0d0;")
         layout = QVBoxLayout()
         layout.setContentsMargins(30, 20, 30, 20)
         layout.setSpacing(16)
+        wrapper.setLayout(layout)
 
         # Program selector
         selector_row = QHBoxLayout()
         selector_label = QLabel("Program:")
-        selector_label.setStyleSheet("font-size: 13px; color: #555;")
+        selector_label.setStyleSheet("font-size: 13px; color: #1a1a1a;")
 
         self.program_selector = QComboBox()
         self.program_selector.addItems([
@@ -94,6 +103,22 @@ class TuringScreen(QWidget):
             "copy"
         ])
         self.program_selector.setFixedWidth(200)
+        # Fix white text in dropdown
+        self.program_selector.setStyleSheet("""
+            QComboBox {
+                font-size: 13px;
+                color: #1a1a1a;
+                background-color: #ffffff;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                padding: 4px 8px;
+            }
+            QComboBox QAbstractItemView {
+                color: #1a1a1a;
+                background-color: #ffffff;
+                selection-background-color: #e8e0d0;
+            }
+        """)
         self.program_selector.currentTextChanged.connect(self.load_program)
 
         selector_row.addWidget(selector_label)
@@ -101,11 +126,12 @@ class TuringScreen(QWidget):
         selector_row.addStretch()
         layout.addLayout(selector_row)
 
-        # Tape display
+        # Tape label
         tape_label = QLabel("Tape")
         tape_label.setStyleSheet("font-size: 13px; font-weight: bold; color: #555;")
         layout.addWidget(tape_label)
 
+        # Tape display widget
         self.tape_widget = QWidget()
         self.tape_widget.setFixedHeight(70)
         self.tape_widget.setStyleSheet("background-color: transparent;")
@@ -115,7 +141,7 @@ class TuringScreen(QWidget):
         self.tape_widget.setLayout(self.tape_row)
         layout.addWidget(self.tape_widget)
 
-        # State display
+        # State display row
         state_row = QHBoxLayout()
         state_row.setSpacing(30)
 
@@ -134,7 +160,7 @@ class TuringScreen(QWidget):
         state_row.addStretch()
         layout.addLayout(state_row)
 
-        # Controls
+        # Control buttons
         controls_row = QHBoxLayout()
         controls_row.setSpacing(12)
 
@@ -150,23 +176,26 @@ class TuringScreen(QWidget):
         reset_btn.setFixedSize(100, 36)
         reset_btn.clicked.connect(self.reset)
 
+        # Fix white text on buttons
+        btn_style = """
+            QPushButton {
+                font-size: 13px;
+                color: #1a1a1a;
+                background-color: #ffffff;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+            }
+            QPushButton:hover {
+                background-color: #e8e0d0;
+                border-color: #8b6914;
+            }
+        """
         for btn in [step_btn, self.run_btn, reset_btn]:
-            btn.setStyleSheet("""
-                QPushButton {
-                    font-size: 13px;
-                    background-color: #ffffff;
-                    border: 1px solid #ccc;
-                    border-radius: 4px;
-                }
-                QPushButton:hover {
-                    background-color: #e8e0d0;
-                    border-color: #8b6914;
-                }
-            """)
+            btn.setStyleSheet(btn_style)
 
         # Speed slider
         speed_label = QLabel("Speed:")
-        speed_label.setStyleSheet("font-size: 13px; color: #555;")
+        speed_label.setStyleSheet("font-size: 13px; color: #1a1a1a;")
 
         self.speed_slider = QSlider(Qt.Orientation.Horizontal)
         self.speed_slider.setMinimum(1)
@@ -189,10 +218,8 @@ class TuringScreen(QWidget):
         layout.addWidget(self.status_label)
 
         layout.addStretch()
-
-        wrapper = QWidget()
-        wrapper.setLayout(layout)
-        self.content_layout.addWidget(wrapper)
+        scroll.setWidget(wrapper)
+        self.content_layout.addWidget(scroll)
 
         self.update_tape_display()
 
@@ -221,6 +248,7 @@ class TuringScreen(QWidget):
         {html}
         """
 
+        # Use same scroll area pattern as history screen
         scroll = QScrollArea()
         scroll.setWidgetResizable(True)
         scroll.setStyleSheet("border: none; background-color: #e8e0d0;")
@@ -236,7 +264,9 @@ class TuringScreen(QWidget):
         doc_label.setWordWrap(True)
         doc_label.setTextFormat(Qt.TextFormat.RichText)
         doc_label.setText(styled)
-        doc_label.setStyleSheet("font-size: 14px; color: #1a1a1a; background-color: transparent;")
+        doc_label.setStyleSheet(
+            "font-size: 14px; color: #1a1a1a; background-color: transparent;"
+        )
         doc_layout.addWidget(doc_label)
         doc_layout.addStretch()
 
@@ -266,7 +296,7 @@ class TuringScreen(QWidget):
             if item.widget():
                 item.widget().deleteLater()
 
-        # Draw tape cells
+        # Draw tape cells centered on head position
         cells = self.machine.get_tape_view(10)
         for pos, symbol in cells:
             cell = QLabel(symbol)
@@ -274,7 +304,7 @@ class TuringScreen(QWidget):
             cell.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
             if pos == self.machine.head:
-                # Current head position — highlighted
+                # Head position — gold highlight
                 cell.setStyleSheet("""
                     QLabel {
                         font-size: 16px;
@@ -297,7 +327,7 @@ class TuringScreen(QWidget):
                 """)
             self.tape_row.addWidget(cell)
 
-        # Update state labels
+        # Update info labels
         self.state_label.setText(f"State:  {self.machine.state}")
         self.steps_label.setText(f"Steps:  {self.machine.steps}")
         self.symbol_label.setText(f"Reading:  {self.machine.read()}")
