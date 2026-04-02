@@ -1,5 +1,6 @@
 import sys
 from screens.home import HomeScreen
+from screens.emulators import EmulatorsScreen
 from PyQt6.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout
 from core.navigation import Navigator
 from core.router import Router
@@ -18,6 +19,7 @@ class MainWindow(QMainWindow):
         self.router = Router()
 
         self.router.register("home", HomeScreen)
+        self.router.register("emulators", EmulatorsScreen)
 
         # QMainWindow needs a central widget to hold everything inside
         self.central = QWidget()
@@ -78,4 +80,3 @@ if __name__ == "__main__":
     window = MainWindow()
     window.show()
     sys.exit(app.exec())
-    
