@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLabel
+from PyQt6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QScrollArea
 from PyQt6.QtCore import Qt
 
 
@@ -6,23 +6,14 @@ class EmulatorsScreen(QWidget):
     def __init__(self, navigate):
         super().__init__()
         self.navigate = navigate
+        self.setStyleSheet("background-color: #e8e0d0;")
         self.setup_ui()
 
     def setup_ui(self):
-        # Main layout — no AlignCenter so widgets stretch full width
         layout = QVBoxLayout()
-        layout.setContentsMargins(40, 20, 40, 20)
-        layout.setSpacing(0)
         self.setLayout(layout)
 
-        # Set background on the whole screen
-        self.setAutoFillBackground(True)
-        palette = self.palette()
-        from PyQt6.QtGui import QColor
-        palette.setColor(self.backgroundRole(), QColor("#e8e0d0"))
-        self.setPalette(palette)
-
-        # Page title
+        # Page title — exactly like history
         title = QLabel("Emulators")
         title.setAlignment(Qt.AlignmentFlag.AlignCenter)
         title.setStyleSheet("""
@@ -31,56 +22,56 @@ class EmulatorsScreen(QWidget):
                 font-weight: bold;
                 color: #1a1a1a;
                 padding: 20px;
-                background-color: transparent;
             }
         """)
+        layout.addWidget(title)
 
-        # Subtitle
+        # Scrollable area — exactly like history
+        scroll = QScrollArea()
+        scroll.setWidgetResizable(True)
+        scroll.setStyleSheet("border: none;")
+
+        content_widget = QWidget()
+        content_widget.setStyleSheet("background-color: #e8e0d0;")
+        content_layout = QVBoxLayout()
+        content_layout.setContentsMargins(20, 10, 20, 10)
+        content_layout.setSpacing(12)
+        content_widget.setLayout(content_layout)
+
+        # Subtitle inside scroll area
         subtitle = QLabel("Select a machine to emulate")
         subtitle.setAlignment(Qt.AlignmentFlag.AlignCenter)
         subtitle.setStyleSheet("""
             QLabel {
                 font-size: 14px;
                 color: #555;
-                padding-bottom: 20px;
+                padding: 8px 0px;
                 background-color: transparent;
             }
         """)
+        content_layout.addWidget(subtitle)
 
-        # Three emulator buttons
-        turing_btn = self.make_button(
-            "Turing Machine",
-            "1936  ·  The theoretical machine that defined computation",
-            "turing"
-        )
-        baby_btn = self.make_button(
-            "Manchester Baby",
-            "1948  ·  The world's first stored-program computer",
-            "baby"
-        )
-        chip8_btn = self.make_button(
-            "CHIP-8",
-            "1977  ·  The virtual machine that brought gaming to hobbyists",
-            "chip8"
-        )
+        # Three emulator cards — same structure as history cards
+        machines = [
+            ("Turing Machine", "1936  ·  The theoretical machine that defined computation", "turing"),
+            ("Manchester Baby", "1948  ·  The world's first stored-program computer", "baby"),
+            ("CHIP-8", "1977  ·  The virtual machine that brought gaming to hobbyists", "chip8"),
+        ]
 
-        layout.addWidget(title)
-        layout.addWidget(subtitle)
-        layout.addSpacing(12)
-        layout.addWidget(turing_btn)
-        layout.addSpacing(12)
-        layout.addWidget(baby_btn)
-        layout.addSpacing(12)
-        layout.addWidget(chip8_btn)
-        layout.addStretch()
+        for title_text, desc_text, route in machines:
+            card = self.make_card(title_text, desc_text, route)
+            content_layout.addWidget(card)
 
-    def make_button(self, title, description, route):
-        # Container acts as clickable card
-        # Unique object name per button prevents style bleeding
-        container = QWidget()
-        container.setObjectName(f"card_{route}")
-        container.setFixedHeight(80)
-        container.setStyleSheet(f"""
+        content_layout.addStretch()
+        scroll.setWidget(content_widget)
+        layout.addWidget(scroll)
+
+    def make_card(self, title, description, route):
+        # Exact same card structure as history.py
+        card = QWidget()
+        card.setObjectName(f"card_{route}")
+        card.setFixedHeight(80)
+        card.setStyleSheet(f"""
             QWidget#card_{route} {{
                 background-color: #ffffff;
                 border: 1px solid #ccc;
@@ -91,31 +82,28 @@ class EmulatorsScreen(QWidget):
                 border-color: #8b6914;
             }}
         """)
-        container.setCursor(Qt.CursorShape.PointingHandCursor)
+        card.setCursor(Qt.CursorShape.PointingHandCursor)
 
-        inner = QVBoxLayout()
-        inner.setContentsMargins(20, 10, 20, 10)
-        inner.setSpacing(4)
-        container.setLayout(inner)
+        card_layout = QVBoxLayout()
+        card_layout.setContentsMargins(16, 10, 16, 10)
+        card_layout.setSpacing(4)
+        card.setLayout(card_layout)
 
-        # Bold title — transparent to mouse so hover goes to container
         title_label = QLabel(title)
         title_label.setStyleSheet(
-            "font-size: 15px; font-weight: bold; color: #1a1a1a; border: none; background-color: transparent;"
+            "font-size: 15px; font-weight: bold; color: #1a1a1a; border: none;"
         )
         title_label.setAttribute(Qt.WidgetAttribute.WA_TransparentForMouseEvents)
 
-        # Description — also transparent to mouse
         desc_label = QLabel(description)
         desc_label.setStyleSheet(
-            "font-size: 13px; color: #555; border: none; background-color: transparent;"
+            "font-size: 13px; color: #555; border: none;"
         )
         desc_label.setAttribute(Qt.WidgetAttribute.WA_TransparentForMouseEvents)
 
-        inner.addWidget(title_label)
-        inner.addWidget(desc_label)
+        card_layout.addWidget(title_label)
+        card_layout.addWidget(desc_label)
 
-        # Navigate when container clicked
-        container.mousePressEvent = lambda event: self.navigate(route)
+        card.mousePressEvent = lambda e: self.navigate(route)
 
-        return container
+        return card
