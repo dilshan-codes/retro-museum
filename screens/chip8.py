@@ -9,11 +9,17 @@ from emulators.chip8_engine import Chip8
 
 class Chip8Display(QWidget):
     # Custom widget that draws the 64x32 CHIP-8 display
-    def __init__(self):
+    def __init__(self, parent_screen):
         super().__init__()
+        self.parent_screen = parent_screen
         self.pixels = [[0] * 64 for _ in range(32)]
         self.setMinimumSize(512, 256)
         self.setStyleSheet("background-color: #1a1a1a;")
+        self.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
+
+    def mousePressEvent(self, event):
+        # When display clicked grab focus so key events work
+        self.parent_screen.setFocus()
 
     def update_pixels(self, pixels):
         self.pixels = pixels
@@ -74,7 +80,7 @@ class Chip8Screen(QWidget):
         self.main_layout.setSpacing(0)
         self.setLayout(self.main_layout)
 
-        # Top bar — warm background so it's visible
+        # Top bar
         top_bar = QWidget()
         top_bar.setStyleSheet("background-color: #e8e0d0;")
         top_layout = QHBoxLayout()
@@ -165,9 +171,14 @@ class Chip8Screen(QWidget):
         load_row.addStretch()
         layout.addLayout(load_row)
 
-        # CHIP-8 display canvas
-        self.chip8_display = Chip8Display()
+        # CHIP-8 display — pass self so display can focus parent on click
+        self.chip8_display = Chip8Display(self)
         layout.addWidget(self.chip8_display)
+
+        # Click hint
+        click_hint = QLabel("Click the display area first, then use keyboard keys to play")
+        click_hint.setStyleSheet("font-size: 11px; color: #8b6914;")
+        layout.addWidget(click_hint)
 
         # Registers title
         reg_title = QLabel("Registers")
@@ -271,6 +282,9 @@ class Chip8Screen(QWidget):
         scroll.setWidget(wrapper)
         self.content_layout.addWidget(scroll)
 
+        # Grab focus immediately so keys work without clicking first
+        self.setFocus()
+
     def show_history_doc(self):
         self.clear_content()
         self.toggle_btn.setText("⚙  View Emulator")
@@ -348,6 +362,8 @@ class Chip8Screen(QWidget):
             self.rom_label.setText(f"Loaded: {os.path.basename(path)}")
             self.chip8_display.update_pixels(self.machine.display)
             self.update_registers()
+            # Grab focus after loading so keys work immediately
+            self.setFocus()
 
     def run_cycle(self):
         if not self.machine.running:
@@ -369,6 +385,7 @@ class Chip8Screen(QWidget):
                 return
             self.run_timer.start(16)
             self.run_btn.setText("Pause")
+            self.setFocus()
 
     def reset(self):
         self.run_timer.stop()
