@@ -8,6 +8,7 @@ from screens.emulators import EmulatorsScreen
 from screens.history import HistoryScreen
 from screens.history_detail import HistoryDetailScreen
 from screens.turing import TuringScreen
+from screens.baby import BabyScreen
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -25,6 +26,7 @@ class MainWindow(QMainWindow):
         self.router.register("emulators", EmulatorsScreen)
         self.router.register("history", HistoryScreen)
         self.router.register("turing", TuringScreen)
+        self.router.register("baby", BabyScreen)
         
 
         # QMainWindow needs a central widget to hold everything inside
