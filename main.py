@@ -6,6 +6,7 @@ from widgets.navbar import NavBar
 from screens.home import HomeScreen
 from screens.emulators import EmulatorsScreen
 from screens.history import HistoryScreen
+from screens.history_detail import HistoryDetailScreen
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -57,19 +58,24 @@ class MainWindow(QMainWindow):
         self.switch_screen(route)
 
     def switch_screen(self, route):
-        # Remove and delete the current screen if one exists
         if self.current_screen is not None:
             self.main_layout.removeWidget(self.current_screen)
             self.current_screen.hide()
             self.current_screen.deleteLater()
             self.current_screen = None
 
-        # Ask the router for the screen class matching this route
+        # Handle history detail routes — pass event ID
+        if route.startswith("history_detail_"):
+            event_id = route.replace("history_detail_", "")
+            self.current_screen = HistoryDetailScreen(self.handle_navigate, event_id)
+            self.main_layout.addWidget(self.current_screen)
+            return
+
         screen_class = self.router.resolve(route)
         if screen_class is not None:
             self.current_screen = screen_class(self.handle_navigate)
             self.main_layout.addWidget(self.current_screen)
-
+            
     def showEvent(self, event):
         # Runs automatically when window first appears — load home screen
         super().showEvent(event)
