@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QScrollArea
+from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLabel, QScrollArea
 from PyQt6.QtCore import Qt
 
 
@@ -29,7 +29,9 @@ class EmulatorsScreen(QWidget):
         # Scrollable area — exactly like history
         scroll = QScrollArea()
         scroll.setWidgetResizable(True)
-        scroll.setStyleSheet("border: none;")
+        # Fix white bleed from scroll area and its viewport
+        scroll.setStyleSheet("border: none; background-color: #e8e0d0;")
+        scroll.viewport().setStyleSheet("background-color: #e8e0d0;")
 
         content_widget = QWidget()
         content_widget.setStyleSheet("background-color: #e8e0d0;")
@@ -67,7 +69,7 @@ class EmulatorsScreen(QWidget):
         layout.addWidget(scroll)
 
     def make_card(self, title, description, route):
-        # Exact same card structure as history.py
+        # Unique object name per card prevents style bleeding
         card = QWidget()
         card.setObjectName(f"card_{route}")
         card.setFixedHeight(80)
@@ -89,21 +91,24 @@ class EmulatorsScreen(QWidget):
         card_layout.setSpacing(4)
         card.setLayout(card_layout)
 
+        # Bold title — transparent to mouse so hover goes to card
         title_label = QLabel(title)
         title_label.setStyleSheet(
-            "font-size: 15px; font-weight: bold; color: #1a1a1a; border: none;"
+            "font-size: 15px; font-weight: bold; color: #1a1a1a; border: none; background-color: transparent;"
         )
         title_label.setAttribute(Qt.WidgetAttribute.WA_TransparentForMouseEvents)
 
+        # Description — also transparent to mouse
         desc_label = QLabel(description)
         desc_label.setStyleSheet(
-            "font-size: 13px; color: #555; border: none;"
+            "font-size: 13px; color: #555; border: none; background-color: transparent;"
         )
         desc_label.setAttribute(Qt.WidgetAttribute.WA_TransparentForMouseEvents)
 
         card_layout.addWidget(title_label)
         card_layout.addWidget(desc_label)
 
+        # Navigate when card clicked
         card.mousePressEvent = lambda e: self.navigate(route)
 
         return card
