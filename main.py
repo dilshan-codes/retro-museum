@@ -7,6 +7,7 @@ from screens.home import HomeScreen
 from screens.emulators import EmulatorsScreen
 from screens.history import HistoryScreen
 from screens.history_detail import HistoryDetailScreen
+from screens.turing import TuringScreen
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -23,6 +24,7 @@ class MainWindow(QMainWindow):
         self.router.register("home", HomeScreen)
         self.router.register("emulators", EmulatorsScreen)
         self.router.register("history", HistoryScreen)
+        self.router.register("turing", TuringScreen)
         
 
         # QMainWindow needs a central widget to hold everything inside
@@ -75,7 +77,7 @@ class MainWindow(QMainWindow):
         if screen_class is not None:
             self.current_screen = screen_class(self.handle_navigate)
             self.main_layout.addWidget(self.current_screen)
-            
+
     def showEvent(self, event):
         # Runs automatically when window first appears — load home screen
         super().showEvent(event)
