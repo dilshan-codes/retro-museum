@@ -12,6 +12,18 @@ Retro Computing Museum is an educational desktop app that lets you explore three
 
 The app was built as a learning project to understand how emulators work from the ground up, with every line of code written from scratch.
 
+<div align="center">
+  <img src="assets/ss's/img1.png" width="48%"/>
+  &nbsp;&nbsp;
+  <img src="assets/ss's/img2.png" width="48%"/>
+</div>
+<br>
+<div align="center">
+  <img src="assets/ss's/img3.png" width="48%"/>
+  &nbsp;&nbsp;
+  <img src="assets/ss's/img4.png" width="48%"/>
+</div>
+
 ---
 
 ## Machines Included
@@ -19,11 +31,23 @@ The app was built as a learning project to understand how emulators work from th
 ### Turing Machine — 1936
 Alan Turing's theoretical machine that defined what computation means. Load one of three built-in programs, step through execution one instruction at a time, and watch the tape and read/write head update in real time.
 
+<div align="center">
+  <img src="assets/ss's/turing.png" width="78%"/>
+</div>
+
 ### Manchester Baby — 1948
 The world's first stored-program computer. The app loads the actual first program ever run on June 21, 1948. Watch the 32-word memory grid update as the machine executes each of its 7 instructions.
 
+<div align="center">
+  <img src="assets/ss's/baby.png" width="78%"/>
+</div>
+
 ### CHIP-8 — 1977
 A virtual machine from the hobbyist computing era. Load any `.ch8` ROM file and play real games — Pong, Breakout, Space Invaders — with live register and memory display.
+
+<div align="center">
+  <img src="assets/ss's/ch8.png" width="78%"/>
+</div>
 
 ---
 
@@ -169,4 +193,5 @@ Free CHIP-8 ROMs can be found at [zophar.net](https://www.zophar.net/pdroms/chip
 
 ---
 
-*Built from scratch as a personal learning project.*
+*Built from scratch as a personal learning project.* 
+<p><strong>dilshan-codes: </strong><a href="https://github.com/dilshan-codes">@dilshan-codes</a></p>
