@@ -4,6 +4,8 @@ A Windows desktop application that brings the history of computing to life throu
 
 ![Python](https://img.shields.io/badge/Python-3.12-blue) ![PyQt6](https://img.shields.io/badge/PyQt6-6.11-green) ![Platform](https://img.shields.io/badge/Platform-Windows-lightgrey)
 
+https://github.com/user-attachments/assets/0931c121-8246-4883-aa28-5cdc86e6eec5
+
 ---
 
 ## What Is This?
@@ -31,23 +33,14 @@ The app was built as a learning project to understand how emulators work from th
 ### Turing Machine — 1936
 Alan Turing's theoretical machine that defined what computation means. Load one of three built-in programs, step through execution one instruction at a time, and watch the tape and read/write head update in real time.
 
-<div align="center">
-  <img src="assets/ss's/turing.png" width="78%"/>
-</div>
 
 ### Manchester Baby — 1948
 The world's first stored-program computer. The app loads the actual first program ever run on June 21, 1948. Watch the 32-word memory grid update as the machine executes each of its 7 instructions.
 
-<div align="center">
-  <img src="assets/ss's/baby.png" width="78%"/>
-</div>
 
 ### CHIP-8 — 1977
 A virtual machine from the hobbyist computing era. Load any `.ch8` ROM file and play real games — Pong, Breakout, Space Invaders — with live register and memory display.
 
-<div align="center">
-  <img src="assets/ss's/ch8.png" width="78%"/>
-</div>
 
 ---
 
@@ -154,6 +147,10 @@ python main.py
 5. Press **Run** to execute automatically — adjust speed with the slider
 6. Press **Reset** to start the program over
 
+<div align="center">
+  <img src="assets/ss's/turing.png" width="78%"/>
+</div>
+
 ### Manchester Baby
 1. Go to Emulators → Manchester Baby
 2. The machine loads the actual first program ever run — June 21, 1948
@@ -163,6 +160,10 @@ python main.py
 6. The current instruction is decoded and shown in plain English below the grid
 7. Press **Run** to execute automatically
 8. Press **Reset** to reload the 1948 program
+
+<div align="center">
+  <img src="assets/ss's/baby.png" width="78%"/>
+</div>
 
 ### CHIP-8
 1. Go to Emulators → CHIP-8
@@ -176,9 +177,14 @@ CHIP-8 Key    Keyboard
 4 5 6 D  →   Q W E R
 7 8 9 E  →   A S D F
 A 0 B F  →   Z X C V
+
 ```
 
 Free CHIP-8 ROMs can be found at [zophar.net](https://www.zophar.net/pdroms/chip8.html).
+
+<div align="center">
+  <img src="assets/ss's/ch8.png" width="78%"/>
+</div>
 
 ---
 
